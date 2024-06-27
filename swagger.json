@@ -1,39 +1,95 @@
 {
-    "swagger": "2.0",
-    "info": {
-      "title": "CSV Upload API",
-      "version": "1.0.0",
-      "description": "API to upload and parse CSV files containing cryptocurrency trades"
+  "swagger": "2.0",
+  "info": {
+    "title": "CSV Upload API",
+    "version": "1.0.0",
+    "description": "API to upload and parse CSV files containing cryptocurrency trades"
+  },
+  "host": "localhost:3000",
+  "basePath": "/",
+  "schemes": ["http"],
+  "paths": {
+    "/uploadCsv": {
+      "post": {
+        "summary": "Upload a CSV file",
+        "consumes": ["multipart/form-data"],
+        "parameters": [
+          {
+            "in": "formData",
+            "name": "file",
+            "type": "file",
+            "description": "The CSV file to upload",
+            "required": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "File uploaded and data stored successfully",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "UTC_Time": { "type": "string", "format": "date-time" },
+                  "Operation": { "type": "string" },
+                  "Market": { "type": "string" },
+                  "Base_Coin": { "type": "string" },
+                  "Quote_Coin": { "type": "string" },
+                  "Buy_Sell_Amount": { "type": "number" },
+                  "Price": { "type": "number" },
+                  "accountId": { "type": "string" }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No file uploaded"
+          },
+          "500": {
+            "description": "Server error"
+          }
+        }
+      }
     },
-    "host": "localhost:3000",
-    "basePath": "/",
-    "schemes": ["http"],
-    "paths": {
-      "/upload-csv": {
-        "post": {
-          "summary": "Upload a CSV file",
-          "consumes": ["multipart/form-data"],
-          "parameters": [
-            {
-              "in": "formData",
-              "name": "file",
-              "type": "file",
-              "description": "The CSV file to upload"
+    "/getBalance": {
+      "post": {
+        "summary": "Get balance of base coins before a given timestamp",
+        "consumes": ["application/json"],
+        "parameters": [
+          {
+            "in": "body",
+            "name": "timestamp",
+            "description": "The timestamp to get balances before",
+            "required": true,
+            "schema": {
+              "type": "object",
+              "properties": {
+                "timestamp": {
+                  "type": "string",
+                  "example": "2022-09-28 12:00:00"
+                }
+              }
             }
-          ],
-          "responses": {
-            "200": {
-              "description": "File uploaded and data stored successfully"
-            },
-            "400": {
-              "description": "No file uploaded"
-            },
-            "500": {
-              "description": "Server error"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Balance of base coins",
+            "schema": {
+              "type": "object",
+              "additionalProperties": {
+                "type": "number"
+              }
             }
+          },
+          "400": {
+            "description": "Timestamp is required"
+          },
+          "500": {
+            "description": "Server error"
           }
         }
       }
     }
   }
-  
+}

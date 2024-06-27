@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-mongoose.connect('mongodb://localhost:27017/csvdata');
+mongoose.connect('mongodb+srv://duyoof:qwertyuiop@atlascluster.tnkmaki.mongodb.net/?retryWrites=true&w=majority&appName=AtlasCluster');
 
 const db = mongoose.connection;
 db.on('error', console.error.bind(console, 'connection error:'));
